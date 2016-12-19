@@ -1,0 +1,65 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC
+"-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<hibernate-mapping>
+    <class table="user" entity-name="org.amfproject.other.model.user.UserObject">
+        <id name="id" column="user_id" type="java.lang.Long">
+            <generator class="native"/>
+        </id>
+        <property name="username" column="user_username" type="java.lang.String" length="50" />
+        <property name="enabled" column="user_enabled" type="boolean" />
+        <property name="system" column="is_system" type="boolean"  />
+        <property name="admin" column="is_admin" type="boolean"  />
+        <property name="expired" column="is_account_expired" type="boolean"  />
+    </class>
+    <class table="company" entity-name="org.amfproject.other.model.company.CompanyObject">
+        <id name="id" column="company_id" type="java.lang.Long">
+            <generator class="native"/>
+        </id>
+        <property name="companyName" column="user_username" type="java.lang.String" length="100" />
+        <property name="companyCode" column="companyCode" type="java.lang.String" />
+    </class>
+    <class table="user_contact_group" entity-name="org.amfproject.other.model.contact.UserContactGroup">
+        <id name="id" column="contact_group_id" type="java.lang.Long">
+            <generator class="native"/>
+        </id>
+        <property name="groupName" column="contact_group_name" type="java.lang.String" length="20" />
+        <property name="lftval" column="lftval" type="java.lang.Integer" />
+        <property name="rgtval" column="rgtval" type="java.lang.Integer" />
+        <many-to-one name="belongedCompany" column="contact_group_owner" class="org.amfproject.other.model.company.CompanyObject" />
+        <many-to-one name="parent" column="contact_group_parent" class="org.amfproject.other.model.contact.UserContactGroup" />
+    </class>
+    <class table="user_contact_info" entity-name="org.amfproject.other.model.contact.UserContactInfo">
+        <id name="id" column="contact_id" type="java.lang.Long">
+            <generator class="native"/>
+        </id>
+        <property name="realname" column="real_name" type="java.lang.String" length="50" />
+        <property name="mailAddress" column="mail_address" type="java.lang.String" length="50" />
+        <many-to-one name="belongedCompany" column="belonged_company" class="org.amfproject.other.model.company.CompanyObject"/>
+        <many-to-one name="owner" column="contact_user" class="org.amfproject.other.model.user.UserObject"/>
+        <many-to-one name="group" column="contact_group" class="org.amfproject.other.model.user.UserObject"/>
+    </class>
+    <class table="user_contact_group_manager" entity-name="org.amfproject.other.model.contact.UserContactGroupManager">
+        <id name="id" column="user_contact_group_manager_id" type="java.lang.Long">
+            <generator class="native"/>
+        </id>
+        <many-to-one name="group" column="managed_group" class="org.amfproject.other.model.contact.UserContactGroup" />
+        <many-to-one name="manager" column="manager_user" class="org.amfproject.other.model.contact.UserContactInfo" />
+    </class>
+    <class table="es_attr_enum" entity-name="org.amfproject.other.model.es.ESAttrEnumData">
+        <id name="id" column="es_attr_enum_id" type="java.lang.Long">
+            <generator class="native"/>
+        </id>
+        <property name="enumName" column="es_attr_enum_name" type="java.lang.String" length="400" />
+        <many-to-one name="belongedCompany" column="contact_group_owner" class="org.amfproject.other.model.company.CompanyObject" />
+    </class>
+    
+    <class table="es_attr_enum_data" entity-name="org.amfproject.other.model.es.ESAttrEnumTableEntry">
+        <id name="id" column="es_attr_enum_id" type="java.lang.Long">
+            <generator class="native"/>
+        </id>
+        <property name="val" column="es_attr_enum_val" type="java.lang.String" length="400" />
+        <many-to-one name="owner" column="es_attr_enum_data_owner" class="org.amfproject.other.model.es.ESAttrEnumData" />
+    </class>
+</hibernate-mapping>

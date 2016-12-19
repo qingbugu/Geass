@@ -1,0 +1,127 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:aop="http://www.springframework.org/schema/aop"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xmlns:tx="http://www.springframework.org/schema/tx"
+       xsi:schemaLocation="
+			   http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-2.0.xsd
+			   http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx-2.0.xsd
+			   http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop-2.0.xsd
+                           ">
+
+    <bean class="org.springframework.orm.jpa.support.PersistenceAnnotationBeanPostProcessor" />
+
+    <bean class="org.springframework.beans.factory.annotation.AutowiredAnnotationBeanPostProcessor"/>
+
+    <!-- default local database configuration begins
+    ( Notice: put this in the beginning of this file and other data transcation managers) -->
+
+    <bean id="otherDefaultPrefixSupport" class="org.amfproject.other.core.dao.support.OTHERTablePrefixSupport" >
+        <property name="prefix" value="other_" />
+    </bean>
+
+    <bean id="otherDataSource"
+	class="org.springframework.jdbc.datasource.DriverManagerDataSource">
+        <property name="driverClassName" value="com.mysql.jdbc.Driver" />
+        <property name="url" value="jdbc:mysql://localhost/OTHERWebPlatform?useUnicode=true&amp;characterEncoding=UTF-8" />
+        <property name="username" value="lucy" />
+        <property name="password" value="142857" />
+    </bean>
+
+    <bean id="otherEntityManagerFactory"
+	class="org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean" depends-on="otherDefaultPrefixSupport" >
+        <property name="dataSource" ref="otherDataSource" />
+        <property name="persistenceUnitName" value="punit-other" />
+        <property name="jpaVendorAdapter">
+            <bean class="org.springframework.orm.jpa.vendor.HibernateJpaVendorAdapter">
+                <property name="database" value="MYSQL" />
+                <property name="showSql" value="false" />
+            </bean>
+        </property>
+	<property name="packagesToScan">
+            <list>
+                <value>org.amfproject.other.model</value>
+            </list>
+        </property>
+        <property name="jpaPropertyMap">
+            <map>
+                <entry key="hibernate.hbm2ddl.auto" value="update" />
+                <entry key="hibernate.ejb.naming_strategy" value="org.amfproject.other.core.dao.support.OTHERTablePrefixSupport" />
+                <entry key="hibernate.cache.use_query_cache" value="true" />
+                <entry key="hibernate.cache.use_second_level_cache" value="true" />
+                <entry key="hibernate.cache.provider_class" value="org.hibernate.cache.EhCacheProvider" />
+            </map>
+        </property>
+    </bean>
+
+    <bean id="otherTransactionManager" class="org.amfproject.other.core.dao.support.OTHERTransactionManager">
+        <property name="entityManagerFactory" ref="otherEntityManagerFactory" />
+        <property name="persistenceUnitName" value="punit-other" />
+    </bean>
+
+    <tx:annotation-driven transaction-manager="otherTransactionManager" />
+
+    <bean id="zookeeper" class="org.amfproject.other.platform.rpc.OTHERZooKeeper">
+        <property name="connectURL" value="http://hako.coolcto.com.cn/zookeeper.api" />
+        <property name="region" value="other" />
+    </bean>
+
+    <!-- default local database configuration ends -->
+
+    <bean id="otherWebSystem" class="org.amfproject.other.core.system.OTHERWebSystemInstance" >
+        <property name="debugEnabled" value="true" />
+        <property name="adminMailAddress" value="yui@mewmew.cn" />
+        <property name="hostAddress" value="http://localhost:8080/other" />
+        <property name="defaultDateFormatString" value="yyyy/MM/dd" />
+        <property name="defaultTimeFormatString" value="yyyy-MM-dd'T'HH:mm:ssXXX" />
+        <property name="systemCapacity" value="20" />
+        <property name="configJavaScriptLocation" value="/script/config.js" />
+        <!-- Server type can be CLIENT(Request Only),WORKER(Respond Only),COWORKER(BI-Direction)-->
+        <property name="serverType" value="COWORKER" />
+        <property name="serverLicence" value="" />
+        <property name="rootHostAddress" value="http://localhost:8080/other" />
+        <property name="serverEnvParameters">
+            <map>
+                <entry key="other.core.user.login_expire_limit" value="0"  />
+            </map>
+        </property>
+    </bean>
+
+
+     <bean id="mailSender" class="org.springframework.mail.javamail.JavaMailSenderImpl">
+        <property name="host" value="smtp.exmail.qq.com"/>
+        <property name="username" value="webadmin@mewmew.cn" />
+        <property name="password" value="8pqYn%2l;" />
+        <property name="defaultEncoding" value="UTF-8" />
+        <property name="javaMailProperties">
+            <props>
+                <prop key="mail.smtp.auth">true</prop>
+                <prop key="mail.smtp.timeout">25000</prop>
+                <prop key="mail.smtp.port">25</prop>
+                <prop key="mail.smtp.socketFactory.port">465</prop>
+                <prop key="mail.smtp.socketFactory.fallback">false</prop>
+                <prop key="mail.smtp.socketFactory.class">javax.net.ssl.SSLSocketFactory</prop>
+            </props>
+        </property>
+    </bean>
+
+
+<!--
+    <bean id="esSessionFactory" class="org.amfproject.other.web.es.ESLocalSessionFactoryBean">
+        <property name="dataSource" ref="dataSource" />
+        <property name="hibernateProperties">
+            <props>
+                <prop key="hibernate.dialect">org.hibernate.dialect.MySQLDialect</prop>
+                <prop key="hibernate.hbm2ddl.auto">update</prop>
+                <prop key="hibernate.max_fetch_depth">1</prop>
+            </props>
+        </property>
+        <property name="mappingLocations" value="/WEB-INF/esdb_context.hbm.xml"/>
+        <property name="mappingDirectoryLocations">
+            <list>
+                <value>/WEB-INF/esdb</value>
+            </list>
+        </property>
+    </bean>
+    -->
+</beans>

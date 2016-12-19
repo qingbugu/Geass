@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<ehcache name="otherCache">
+    <diskStore path="java.io.tmpdir"/>
+    <defaultCache
+      maxElementsInMemory="10000"
+      eternal="false"
+      overflowToDisk="true"
+      timeToIdleSeconds="120"
+      timeToLiveSeconds="120"
+      />
+    <cache name="org.amfproject.other.platform.sso.cache"
+     maxElementsInMemory="10000"
+     eternal="false"
+     timeToLiveSeconds="36000"
+     timeToIdleSeconds="3600"
+     overflowToDisk="true" />
+</ehcache>

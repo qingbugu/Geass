@@ -1,0 +1,1 @@
+<%response.setHeader( "Cache-Control", "no-cache,no-store");response.setDateHeader( "Expires", 0 );response.setHeader( "Pragma", "no-cache" );%><%@page contentType="text/html" pageEncoding="UTF-8"%>${text}

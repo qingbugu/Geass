@@ -1,0 +1,102 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	   xmlns:tsk="http://www.springframework.org/schema/task"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+       xmlns:aop="http://www.springframework.org/schema/aop"
+       xmlns:rabbit="http://www.springframework.org/schema/rabbit"
+       xmlns:context="http://www.springframework.org/schema/context"       
+       xmlns:tx="http://www.springframework.org/schema/tx"
+       xmlns:cache="http://www.springframework.org/schema/cache"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans 
+			   http://www.springframework.org/schema/beans/spring-beans-2.5.xsd
+			   http://www.springframework.org/schema/context
+			   http://www.springframework.org/schema/context/spring-context-2.5.xsd
+			   http://www.springframework.org/schema/tx 
+			   http://www.springframework.org/schema/tx/spring-tx-2.0.xsd
+			   http://www.springframework.org/schema/task
+			   http://www.springframework.org/schema/task/spring-task-3.0.xsd
+                           http://www.springframework.org/schema/rabbit
+                           http://www.springframework.org/schema/rabbit/spring-rabbit-1.0.xsd
+                           http://www.springframework.org/schema/cache
+                           http://www.springframework.org/schema/cache/spring-cache.xsd
+			   http://www.springframework.org/schema/aop 
+			   http://www.springframework.org/schema/aop/spring-aop-2.0.xsd">
+
+    <context:annotation-config />
+    
+    <bean id="cacheManagerFactory" class="org.springframework.cache.ehcache.EhCacheManagerFactoryBean">
+        <property name="configLocation">
+            <value>/WEB-INF/ehcache.xml</value>
+        </property>
+    </bean>
+
+    <bean id="cacheManager" class="org.springframework.cache.ehcache.EhCacheCacheManager">
+        <property name="cacheManager" ref="cacheManagerFactory" />
+    </bean>
+
+    <cache:annotation-driven />
+
+    <tsk:executor id="otskExecutor" pool-size="10" />
+
+    <tsk:scheduler id="otskScheduler" pool-size="10" />
+
+    <tsk:annotation-driven executor="otskExecutor" scheduler="otskScheduler" />
+
+    <context:component-scan base-package="org.amfproject.other.core" />
+
+    <context:component-scan base-package="org.amfproject.other.dao" />
+
+    <context:component-scan base-package="org.amfproject.other.platform" />
+
+    <aop:aspectj-autoproxy />
+    
+<!--    <bean id="jsonrpcdriver" class="org.amfproject.other.web.rpc.jsonrpc.JSONRPCDriverForSpring" />-->
+
+    <bean id="multipartResolver" class="org.springframework.web.multipart.commons.CommonsMultipartResolver" >
+        <property name="maxUploadSize">
+            <value>104857600</value>
+        </property>
+        <property name="maxInMemorySize">
+            <value>4096</value>
+        </property>
+        <property name="defaultEncoding">
+            <value>UTF-8</value>
+        </property>
+    </bean>
+    
+<!--    <bean class="org.amfproject.other.web.sec.OTHERSecurityInterceptor" />-->
+
+    <bean id="velocityEngine" class="org.springframework.ui.velocity.VelocityEngineFactoryBean">
+        <property name="velocityProperties">
+            <value>
+	output.encoding=UTF-8
+	input.encoding=UTF-8
+	resource.loader=class
+	class.resource.loader.class=org.apache.velocity.runtime.resource.loader.ClasspathResourceLoader
+            </value>
+        </property>
+    </bean>
+    
+
+    
+    <rabbit:connection-factory id="rabbitConnectionFactory" channel-cache-size="25" host="localhost" username="guest" password="guest"  />
+    <rabbit:admin id="rabbitmqAdmin" connection-factory="rabbitConnectionFactory"  />
+    <rabbit:template id="localAmqDispatchTemplate" connection-factory="rabbitConnectionFactory"
+  exchange="org.amfproject.other.web.amq.dispatch.exchange" encoding="UTF-8" />
+
+    <!-- rabbit receiver -->
+    <!-- localAmqDispatchExchange ==> localAmqDispatchExchange ==> local listener -->
+    <rabbit:queue id="localAmqNoticeQueue" durable="true" name="org.amfproject.other.web.comm.notice.queue"  />
+    
+    <rabbit:direct-exchange id="localAmqNoticeExchange" name="org.amfproject.other.web.comm.notice.exchange">
+        <rabbit:bindings>
+            <rabbit:binding queue="localAmqNoticeQueue" />
+        </rabbit:bindings>
+    </rabbit:direct-exchange>
+
+    
+
+<!--    <rabbit:listener-container id="localAmqNoticeQueueListenerContainer" connection-factory="rabbitConnectionFactory"  >
+        <rabbit:listener queue-names="org.amfproject.other.web.comm.notice.queue" ref="noticeEventAMQListener" method="handleNoticeRequest" />
+    </rabbit:listener-container>-->
+</beans>
