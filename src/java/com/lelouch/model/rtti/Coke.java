@@ -3,12 +3,19 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package com.lelouch.model.fruit;
+package com.lelouch.model.rtti;
 
 /**
  *
  * @author Administrator
  */
-public class Orange{
-    
+public class Coke {
+
+    public Coke() {
+    }
+
+    public Coke(int i) {
+
+    }
+
 }

@@ -87,7 +87,8 @@ public class UnicodeTest {
 //            sb.append(b);
 //        }
 //        System.out.println(sb); 
-        
+        int a = 0x4;
+        System.out.println(a); 
     }
     
 }

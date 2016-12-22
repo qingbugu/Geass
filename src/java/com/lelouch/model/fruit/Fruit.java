@@ -15,7 +15,7 @@ public class Fruit {
     private String color;
     
     private BigDecimal price;
-
+    
     public String getColor() {
         return color;
     }
