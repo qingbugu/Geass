@@ -55,5 +55,6 @@ public class RegexDemo {
 //        boolean matches = Pattern.matches("^\\w+([-+.]\\w+)*@\\w+([-.]\\w+)*\\.\\w+([-.]\\w+)*$","w.ww@dg.cn"); //匹配邮箱
         boolean matches = Pattern.matches("^\\d{4}-\\d{1,2}-\\d{1,2}","2015-55-53"); //匹配日期    有问题
         System.out.println(matches); 
+        
     }   
 }

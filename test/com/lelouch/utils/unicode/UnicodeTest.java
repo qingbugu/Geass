@@ -45,13 +45,13 @@ public class UnicodeTest {
     @Test
     public void testSomeMethod() {
 //        String test = "最代码网站地址:www.zuidaima.com";  
-        String test = "我一";  
+        String test = "导";  
    
-//        String unicode = unicodeUtils.string2Unicode(test);  
+        String unicode = unicodeUtils.string2Unicode(test);  
 
 //        String string = unicodeUtils.unicode2String(unicode) ;  
 
-//        System.out.println(unicode);  
+        System.out.println(unicode);  
 
 //        System.out.println(string);  
 //        StringBuffer sb = new StringBuffer();
@@ -87,8 +87,8 @@ public class UnicodeTest {
 //            sb.append(b);
 //        }
 //        System.out.println(sb); 
-        int a = 0x4;
-        System.out.println(a); 
+//        int a = 0x4;
+//        System.out.println(a); 
     }
     
 }
