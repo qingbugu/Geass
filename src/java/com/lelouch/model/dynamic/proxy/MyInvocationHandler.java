@@ -7,6 +7,7 @@ package com.lelouch.model.dynamic.proxy;
 
 import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.Method;
+import java.lang.reflect.Proxy;
 
 /**
  *
@@ -15,9 +16,9 @@ import java.lang.reflect.Method;
 public class MyInvocationHandler implements InvocationHandler{
     private Object obj;
     
-    public MyInvocationHandler(Object obj) {
-           this.obj = obj;
-    }
+//    public MyInvocationHandler(Object obj) {
+//           this.obj = obj;
+//    }
     
     @Override
     public Object invoke(Object proxy, Method method, Object[] args) throws Throwable {
@@ -33,5 +34,12 @@ public class MyInvocationHandler implements InvocationHandler{
     public void after() {
            System.out.println("finish……");
     }
-
+    
+    public Object bind(Object obj){
+        this.obj = obj;
+//        return Proxy.newProxyInstance(this.getClass().getClassLoader(), this.obj.getClass().getInterfaces(), this);
+        return Proxy.newProxyInstance(this.obj.getClass().getClassLoader(), this.obj.getClass().getInterfaces(), this);
+//        return Proxy.newProxyInstance(obj.getClass().getClassLoader(), obj.getClass().getInterfaces(), this);
+    }
+    
 }
