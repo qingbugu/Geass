@@ -14,6 +14,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import org.amfproject.other.core.utils.OTHERObjectMapperUtils;
+import org.apache.commons.lang.StringUtils;
 
 /**
  *
@@ -41,14 +42,16 @@ public class GeassTest {
 //          System.out.println(split.length);
 
 /********  *******/
-            char data[] = {'a', 'b', 'c'};
-            String str = new String(data);
-            byte[] bytes = str.getBytes( "unicode" );
-            for(byte b:bytes){
-                System.out.println(b);
-            }
+//            char data[] = {'a', 'b', 'c'};
+//            String str = new String(data);
+//            byte[] bytes = str.getBytes( "unicode" );
+//            for(byte b:bytes){
+//                System.out.println(b);
+//            }
 //            System.out.println(str);
 //            IndexRepositoryServiceImpl i = new IndexRepositoryServiceImpl();
 //            i.printFile();
+            
+            System.out.println("结果："+StringUtils.isBlank("  "));
     }
 }
